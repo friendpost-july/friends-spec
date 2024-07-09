@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Friendship Management API
   version: 1.0.0
-  description: API for managing friendships, including sending, receiving, accepting, and rejecting friend requests, as well as managing friends and friend suggestions.
+  description: API for managing friendships, including sending, receiving, accepting, and rejecting friend requests and unfriend friends, as well as managing friends and friend suggestions.
 
 paths:
   /friendRequests:
