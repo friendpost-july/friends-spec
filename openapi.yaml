@@ -1,0 +1,158 @@
+openapi: 3.0.3
+info:
+  title: Friendship Management API
+  version: 1.0.0
+  description: API for managing friendships, including sending, receiving, accepting, and rejecting friend requests, as well as managing friends and friend suggestions.
+
+paths:
+  /friendRequests:
+    post:
+      summary: Send a friend request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                senderId:
+                  type: string
+                receiverId:
+                  type: string
+              required:
+                - senderId
+                - receiverId
+      responses:
+        '201':
+          description: Friend request sent successfully
+        '400':
+          description: Invalid input data
+
+    get:
+      summary: Get received friend requests
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user to get friend requests for
+      responses:
+        '200':
+          description: List of received friend requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    requestId:
+                      type: string
+                    senderId:
+                      type: string
+                    receiverId:
+                      type: string
+                    status:
+                      type: string
+                      enum: [pending, accepted, rejected]
+
+  /friendRequests/{requestId}:
+    put:
+      summary: Accept or reject a friend request
+      parameters:
+        - in: path
+          name: requestId
+          schema:
+            type: string
+          required: true
+          description: ID of the friend request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [accepted, rejected]
+      responses:
+        '200':
+          description: Friend request updated successfully
+        '404':
+          description: Friend request not found
+        '400':
+          description: Invalid status value
+
+  /friends:
+    get:
+      summary: Get a list of friends
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user to get friends for
+      responses:
+        '200':
+          description: List of friends
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    friendId:
+                      type: string
+                    name:
+                      type: string
+
+  /friends/{userId}/unfriend/{friendId}/:
+    delete:
+      summary: Unfriend a friend
+      parameters:
+        - in: path
+          name: friendId
+          schema:
+            type: string
+          required: true
+          description: ID of the friend to unfriend
+        - in: path
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user
+      responses:
+        '200':
+          description: Unfriended successfully
+        '404':
+          description: Friend not found
+
+  /friendSuggestions:
+    get:
+      summary: Get friend suggestions
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: string
+          required: true
+          description: ID of the user to get friend suggestions for
+      responses:
+        '200':
+          description: List of friend suggestions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    suggestedFriendId:
+                      type: string
+                    name:
+                      type: string
