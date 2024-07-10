@@ -4,8 +4,12 @@ info:
   version: 1.0.0
   description: API for managing friendships, including sending, receiving, accepting, and rejecting friend requests and unfriend friends, as well as managing friends and friend suggestions.
 
+servers:
+  - url: http://friends.friendpost.com/v1
+  - url: http://localhost:19090
+
 paths:
-  /friendRequests:
+  /friendrequests:
     post:
       summary: Send a friend request
       requestBody:
@@ -25,6 +29,10 @@ paths:
       responses:
         '201':
           description: Friend request sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/friendrequest'
         '400':
           description: Invalid input data
 
@@ -45,20 +53,10 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    requestId:
-                      type: string
-                    senderId:
-                      type: string
-                    receiverId:
-                      type: string
-                    status:
-                      type: string
-                      enum: [pending, accepted, rejected]
+                  $ref: '#/components/schemas/friendrequest'
 
-  /friendRequests/{requestId}:
-    put:
+  /friendrequests/{requestId}:
+    patch:
       summary: Accept or reject a friend request
       parameters:
         - in: path
@@ -80,16 +78,20 @@ paths:
       responses:
         '200':
           description: Friend request updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/friendrequest'
         '404':
           description: Friend request not found
         '400':
           description: Invalid status value
 
-  /friends:
+  /friends/{userId}:
     get:
       summary: Get a list of friends
       parameters:
-        - in: query
+        - in: path
           name: userId
           schema:
             type: string
@@ -109,30 +111,28 @@ paths:
                       type: string
                     name:
                       type: string
-
-  /friends/{userId}/unfriend/{friendId}/:
     delete:
       summary: Unfriend a friend
       parameters:
-        - in: path
-          name: friendId
-          schema:
-            type: string
-          required: true
-          description: ID of the friend to unfriend
         - in: path
           name: userId
           schema:
             type: string
           required: true
           description: ID of the user
+        - in: query
+          name: friendId
+          schema:
+            type: string
+          required: true
+          description: ID of the friend to unfriend
       responses:
-        '200':
+        '204':
           description: Unfriended successfully
         '404':
           description: Friend not found
 
-  /friendSuggestions:
+  /friendsuggestions:
     get:
       summary: Get friend suggestions
       parameters:
@@ -156,3 +156,19 @@ paths:
                       type: string
                     name:
                       type: string
+
+
+components:
+  schemas:
+    friendrequest:
+      type: object
+      properties:
+        requestId:
+          type: string
+        senderId:
+          type: string
+        receiverId:
+          type: string
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
