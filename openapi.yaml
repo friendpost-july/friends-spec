@@ -160,7 +160,7 @@ paths:
 
 components:
   schemas:
-    friendrequest:
+    Friends:
       type: object
       properties:
         requestId:
