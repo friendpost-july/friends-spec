@@ -9,7 +9,7 @@ servers:
   - url: http://localhost:19090
 
 paths:
-  /friendrequests:
+  /friends:
     post:
       summary: Send a friend request
       requestBody:
@@ -55,7 +55,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/friendrequest'
 
-  /friendrequests/{requestId}:
+  /friends/{requestId}:
     patch:
       summary: Accept or reject a friend request
       parameters:
