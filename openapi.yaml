@@ -32,14 +32,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Friends'
+                $ref: '#/components/schemas/friendrequest'
         '400':
           description: Invalid input data
-
+          
+  /friends/requests/{userId}:
     get:
       summary: Get received friend requests
       parameters:
-        - in: query
+        - in: path
           name: userId
           schema:
             type: string
@@ -53,7 +54,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Friends'
+                  $ref: '#/components/schemas/friendrequest'
 
   /friends/{requestId}:
     patch:
@@ -81,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Friends'
+                $ref: '#/components/schemas/friendrequest'
         '404':
           description: Friend request not found
         '400':
@@ -160,7 +161,7 @@ paths:
 
 components:
   schemas:
-    Friends:
+    friendrequest:
       type: object
       properties:
         requestId:
